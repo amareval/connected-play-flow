@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Strike | Compact Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ls-crimson: #AA022F;
+            --ls-tan: #D3B38B;
+            --ls-black: #121212;
+            --ls-gray: #1E1E1E;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--ls-black);
+            color: white;
+            overflow: hidden; /* Prevent body scroll, handle in main */
+        }
+
+        h1, h2, .step-number {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            height: 12px;
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 6px;
+            border: 2px solid #000;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--ls-tan);
+        }
+
+        /* Hide broken images and show placeholder */
+        img {
+            min-height: 50px;
+            background-color: #000;
+            position: relative;
+        }
+        
+        .img-error-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1a1a;
+            color: #888;
+            font-size: 10px;
+            text-align: center;
+            padding: 10px;
+            border: 1px dashed #444;
+            z-index: 30;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-[#121212] border-b border-white/10 z-50 py-3 px-6 flex justify-between items-center shadow-lg shrink-0 h-16">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#AA022F] border border-[#D3B38B] flex items-center justify-center">
+                <span class="font-bold italic text-white text-xs">LS</span>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-wide leading-none">CONNECTED PLAY</h1>
+                <p class="text-[9px] text-[#D3B38B] tracking-widest font-bold">STORYBOARD VIEW</p>
+            </div>
+        </div>
+        
+        <!-- FIXER TOOLBAR -->
+        <div class="flex gap-2 items-center bg-black/50 p-1.5 rounded-lg border border-white/10">
+            <span class="text-[9px] text-gray-400 font-bold uppercase mr-1">Fix Images:</span>
+            <button onclick="updateSettings('ext', '.PNG')" class="px-2 py-0.5 text-[10px] bg-[#D3B38B] text-black font-bold rounded transition border border-[#D3B38B]" id="btn-PNG">.PNG</button>
+            <button onclick="updateSettings('ext', '.png')" class="px-2 py-0.5 text-[10px] bg-white/10 hover:bg-[#D3B38B] hover:text-black rounded transition" id="btn-png">.png</button>
+            <button onclick="updateSettings('ext', '.jpg')" class="px-2 py-0.5 text-[10px] bg-white/10 hover:bg-[#D3B38B] hover:text-black rounded transition" id="btn-jpg">.jpg</button>
+        </div>
+    </header>
+
+    <!-- Horizontal Grid Container -->
+    <main class="flex-1 overflow-x-auto overflow-y-hidden p-6">
+        <!-- 
+             GRID LOGIC:
+             grid-rows-2: Forces exactly 2 rows
+             grid-flow-col: Fills columns first (left to right)
+             min-w-max: Ensures container grows horizontally
+        -->
+        <div class="grid grid-rows-2 grid-flow-col gap-6 h-full min-w-max" id="flow-container">
+            <!-- Cards injected here -->
+        </div>
+    </main>
+
+    <script>
+        // Configuration: Sequence of images
+        const steps = [
+            { id: 1, baseName: 'IMG_0205', title: 'Start', desc: 'Initial entry point.' },
+            { id: 2, baseName: 'IMG_0206', title: 'Step 2', desc: 'User interaction.' },
+            { id: 3, baseName: 'IMG_0207', title: 'Step 3', desc: 'Progression.' },
+            { id: 4, baseName: 'IMG_0208', title: 'Step 4', desc: 'Progression.' },
+            { id: 5, baseName: 'IMG_0210', title: 'Step 5', desc: 'Mid-point.' },
+            { id: 6, baseName: 'IMG_0211', title: 'Step 6', desc: 'Progression.' },
+            { id: 7, baseName: 'IMG_0212', title: 'Step 7', desc: 'Progression.' },
+            { id: 8, baseName: 'IMG_0213', title: 'Step 8', desc: 'Progression.' },
+            { id: 9, baseName: 'IMG_0214', title: 'Step 9', desc: 'Near completion.' },
+            { id: 10, baseName: 'IMG_0215', title: 'Step 10', desc: 'Final state.' },
+            { id: 11, baseName: 'IMG_0216', title: 'Step 11', desc: 'New sequence.' },
+            { id: 12, baseName: 'IMG_0217', title: 'Step 12', desc: 'Interaction.' },
+            { id: 13, baseName: 'IMG_0218', title: 'Step 13', desc: 'Data entry.' },
+            { id: 14, baseName: 'IMG_0219', title: 'Step 14', desc: 'Progression.' },
+            { id: 15, baseName: 'IMG_0220', title: 'Step 15', desc: 'Decision.' },
+            { id: 16, baseName: 'IMG_0221', title: 'Step 16', desc: 'Progression.' },
+            { id: 17, baseName: 'IMG_0222', title: 'Step 17', desc: 'Near end.' },
+            { id: 18, baseName: 'IMG_0223', title: 'Complete', desc: 'Confirmation.' }
+        ];
+
+        let currentExt = '.PNG';
+        const container = document.getElementById('flow-container');
+
+        function renderSteps() {
+            container.innerHTML = '';
+            steps.forEach((step, index) => {
+                const fileName = `${step.baseName}${currentExt}`;
+                
+                // Card Design: Vertical, Compact
+                const cardHTML = `
+                    <div class="w-[300px] h-full bg-[#1E1E1E] border border-white/5 rounded-xl p-3 flex flex-col shadow-xl hover:border-[#D3B38B] transition-colors relative group">
+                        
+                        <!-- Header -->
+                        <div class="flex justify-between items-center mb-2 shrink-0">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-[#AA022F] rounded text-white font-bold text-xs flex items-center justify-center shadow-md">
+                                    ${step.id}
+                                </div>
+                                <h2 class="text-sm font-bold text-white truncate w-32">${step.title}</h2>
+                            </div>
+                        </div>
+
+                        <!-- Image Area (Takes available space) -->
+                        <div class="flex-1 bg-black rounded-lg overflow-hidden border border-white/10 relative flex items-center justify-center mb-2">
+                            <img src="${fileName}" 
+                                 onerror="handleImageError(this, '${step.baseName}')" 
+                                 alt="Step ${step.id}" 
+                                 class="w-full h-full object-contain">
+                        </div>
+
+                        <!-- Description (Compact) -->
+                        <div class="shrink-0">
+                            <textarea class="w-full bg-[#121212] text-gray-400 text-xs p-2 rounded border border-white/10 focus:border-[#D3B38B] focus:text-white outline-none resize-none h-[50px] leading-tight" placeholder="Notes...">${step.desc}</textarea>
+                        </div>
+
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+            lucide.createIcons();
+        }
+
+        function handleImageError(img, baseName) {
+            const parent = img.parentElement;
+            if (!parent.querySelector('.img-error-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'img-error-overlay';
+                overlay.innerHTML = `<strong>Missing</strong><span class="font-mono text-white">${baseName}${currentExt}</span>`;
+                parent.appendChild(overlay);
+                img.style.display = 'none';
+            }
+        }
+
+        function updateSettings(type, value) {
+            if (type === 'ext') {
+                currentExt = value;
+                document.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-[#D3B38B]', 'text-black', 'font-bold');
+                    btn.classList.add('bg-white/10', 'text-white');
+                });
+                const activeBtn = document.getElementById(`btn-${value.replace('.', '')}`);
+                if(activeBtn) {
+                    activeBtn.classList.remove('bg-white/10', 'text-white');
+                    activeBtn.classList.add('bg-[#D3B38B]', 'text-black', 'font-bold');
+                }
+            }
+            renderSteps();
+        }
+
+        renderSteps();
+    </script>
+</body>
+</html>
