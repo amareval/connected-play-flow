@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Strike | Connected Play User Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ls-crimson: #AA022F;
+            --ls-tan: #D3B38B;
+            --ls-black: #121212;
+            --ls-gray: #1E1E1E;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--ls-black);
+            color: white;
+            padding-bottom: 100px;
+        }
+
+        h1, h2, .step-number {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .flow-connector {
+            position: absolute;
+            left: 50%;
+            bottom: -40px;
+            height: 40px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--ls-crimson), var(--ls-tan));
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        .flow-connector::after {
+            content: '▼';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--ls-tan);
+            font-size: 12px;
+        }
+
+        .step-card {
+            transition: transform 0.2s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--ls-tan);
+        }
+
+        /* Hide broken images and show placeholder */
+        img {
+            min-height: 50px;
+            background-color: transparent;
+            position: relative;
+        }
+        
+        /* New Diagnostic Error Style */
+        .img-error-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1a1a;
+            color: #888;
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+            border: 1px dashed #444;
+            z-index: 30;
+        }
+        .img-error-overlay strong {
+            color: #ff4444;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full bg-[#121212]/90 backdrop-blur-md border-b border-white/10 z-50 py-4 px-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#AA022F] border border-[#D3B38B] flex items-center justify-center">
+                <span class="font-bold italic text-white text-xs">LS</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">CONNECTED PLAY</h1>
+                <p class="text-[10px] text-[#D3B38B] tracking-widest font-bold">USER EXPERIENCE FLOW</p>
+            </div>
+        </div>
+        
+        <!-- FIXER TOOLBAR -->
+        <div class="flex flex-wrap gap-2 items-center bg-black/50 p-2 rounded-lg border border-white/10">
+            <span class="text-[10px] text-gray-400 font-bold uppercase mr-1">Fix Images:</span>
+            <button onclick="updateSettings('ext', '.PNG')" class="px-2 py-1 text-xs bg-[#D3B38B] text-black font-bold rounded transition border border-[#D3B38B]" id="btn-PNG">.PNG</button>
+            <button onclick="updateSettings('ext', '.png')" class="px-2 py-1 text-xs bg-white/10 hover:bg-[#D3B38B] hover:text-black rounded transition" id="btn-png">.png</button>
+            <button onclick="updateSettings('ext', '.jpg')" class="px-2 py-1 text-xs bg-white/10 hover:bg-[#D3B38B] hover:text-black rounded transition" id="btn-jpg">.jpg</button>
+        </div>
+    </header>
+
+    <!-- Flow Container -->
+    <main class="max-w-4xl mx-auto pt-40 px-4 flex flex-col items-center gap-12" id="flow-container">
+        <!-- Generated via JS below -->
+    </main>
+
+    <script>
+        // Configuration: Sequence of images
+        const steps = [
+            { id: 1, baseName: 'IMG_0205', title: 'Flow Start', desc: 'Initial entry point or landing screen.' },
+            { id: 2, baseName: 'IMG_0206', title: 'Step 2', desc: 'User interaction or selection.' },
+            { id: 3, baseName: 'IMG_0207', title: 'Step 3', desc: ' progression.' },
+            { id: 4, baseName: 'IMG_0208', title: 'Step 4', desc: ' progression.' },
+            { id: 5, baseName: 'IMG_0210', title: 'Step 5', desc: 'Mid-point interaction.' },
+            { id: 6, baseName: 'IMG_0211', title: 'Step 6', desc: ' progression.' },
+            { id: 7, baseName: 'IMG_0212', title: 'Step 7', desc: ' progression.' },
+            { id: 8, baseName: 'IMG_0213', title: 'Step 8', desc: ' progression.' },
+            { id: 9, baseName: 'IMG_0214', title: 'Step 9', desc: 'Near completion.' },
+            { id: 10, baseName: 'IMG_0215', title: 'Step 10', desc: 'Final state or confirmation.' },
+            { id: 11, baseName: 'IMG_0216', title: 'Step 11', desc: 'New sequence start.' },
+            { id: 12, baseName: 'IMG_0217', title: 'Step 12', desc: 'User interaction.' },
+            { id: 13, baseName: 'IMG_0218', title: 'Step 13', desc: 'Data entry or review.' },
+            { id: 14, baseName: 'IMG_0219', title: 'Step 14', desc: ' progression.' },
+            { id: 15, baseName: 'IMG_0220', title: 'Step 15', desc: 'Decision point.' },
+            { id: 16, baseName: 'IMG_0221', title: 'Step 16', desc: ' progression.' },
+            { id: 17, baseName: 'IMG_0222', title: 'Step 17', desc: 'Near end of flow.' },
+            { id: 18, baseName: 'IMG_0223', title: 'Flow Complete', desc: 'Final confirmation screen.' }
+        ];
+
+        let currentExt = '.PNG';
+
+        const container = document.getElementById('flow-container');
+
+        // Render function
+        function renderSteps() {
+            container.innerHTML = '';
+            steps.forEach((step, index) => {
+                const isLast = index === steps.length - 1;
+                const fileName = `${step.baseName}${currentExt}`;
+                
+                const cardHTML = `
+                    <div class="relative w-full max-w-4xl">
+                        ${!isLast ? '<div class="flow-connector"></div>' : ''}
+                        <div class="flex flex-col md:flex-row gap-8 bg-[#1E1E1E] border border-white/5 rounded-xl p-8 shadow-2xl step-card relative z-10 items-start">
+                            <div class="absolute -left-3 -top-3 w-10 h-10 bg-[#AA022F] rounded-lg flex items-center justify-center border-2 border-[#121212] shadow-lg z-20">
+                                <span class="step-number text-white font-bold text-lg">${step.id}</span>
+                            </div>
+                            
+                            <!-- Image Container: Constrained Height & Flex Centering -->
+                            <div class="w-full md:w-5/12 shrink-0 bg-[#000000] rounded-lg overflow-hidden border border-white/10 relative group flex items-center justify-center p-2" style="min-height: 300px;">
+                                <img src="${fileName}" onerror="handleImageError(this, '${step.baseName}')" alt="Step ${step.id}" 
+                                     class="max-h-[500px] w-auto h-auto object-contain shadow-lg rounded" style="width: auto; height: auto; max-width: 100%;">
+                            </div>
+
+                            <div class="flex flex-col justify-center w-full md:w-7/12 pt-4">
+                                <h2 class="text-3xl text-white mb-2 font-light tracking-wide">${step.title}</h2>
+                                <div class="h-1 w-16 bg-[#D3B38B] mb-6"></div>
+                                <textarea class="w-full bg-[#121212] text-gray-300 text-base p-4 rounded-lg border border-white/10 focus:border-[#D3B38B] focus:text-white outline-none transition-colors resize-y min-h-[150px] leading-relaxed" placeholder="Describe the user action here...">${step.desc}</textarea>
+                                <div class="mt-6 flex gap-3">
+                                    <span class="px-3 py-1.5 bg-white/5 rounded text-[11px] text-gray-500 uppercase font-bold tracking-wider border border-white/5">UI Action</span>
+                                    <span class="px-3 py-1.5 bg-white/5 rounded text-[11px] text-gray-500 uppercase font-bold tracking-wider border border-white/5">System State</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+            lucide.createIcons();
+        }
+
+        function handleImageError(img, baseName) {
+            const parent = img.parentElement;
+            if (!parent.querySelector('.img-error-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'img-error-overlay';
+                overlay.innerHTML = `<strong>Image Not Found</strong>Looking for: <span class="font-mono bg-black px-1 text-white">${baseName}${currentExt}</span><br><br>Use the toolbar above to try a different extension (.png vs .PNG).`;
+                parent.appendChild(overlay);
+                img.style.display = 'none';
+            }
+        }
+
+        function updateSettings(type, value) {
+            if (type === 'ext') {
+                currentExt = value;
+                // Update button styles
+                document.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-[#D3B38B]', 'text-black', 'font-bold');
+                    btn.classList.add('bg-white/10', 'text-white');
+                });
+                const activeBtn = document.getElementById(`btn-${value.replace('.', '')}`);
+                if(activeBtn) {
+                    activeBtn.classList.remove('bg-white/10', 'text-white');
+                    activeBtn.classList.add('bg-[#D3B38B]', 'text-black', 'font-bold');
+                }
+            }
+            renderSteps();
+        }
+
+        // Initial render
+        renderSteps();
+    </script>
+</body>
+</html>
